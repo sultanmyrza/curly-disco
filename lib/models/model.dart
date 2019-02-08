@@ -12,8 +12,8 @@ class Goal {
 
   Goal({
     @required this.uuid,
-    this.title,
-    this.photoUrl,
+    this.title = "New goal",
+    this.photoUrl = "",
     this.photoLocalPathIOS,
     this.photoLocalPathAndroid,
     this.isCompleted = false,
@@ -52,9 +52,9 @@ class Goal {
         photoLocalPathAndroid = json['photoLocalPathAndroid'] ?? '',
         isCompleted = json['isCompleted'] ?? false,
         parentGoalsUuids =
-            (json['parentGoalsUuids'] as List<String>) ?? <String>[],
+            List<String>.from(json['parentGoalsUuids'] ?? <String>[]),
         childGoalsUuids =
-            (json['childGoalsUuids'] as List<String>) ?? <String>[];
+            List<String>.from(json['childGoalsUuids'] ?? <String>[]);
 
   Map toJson() {
     Map result = {
