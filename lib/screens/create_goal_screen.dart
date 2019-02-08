@@ -4,9 +4,10 @@ import 'package:redux/redux.dart';
 import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models/view_models.dart';
+import 'package:redux_training/widgets/goal_image_picker.dart';
 
 class CreateGoalScreen extends StatefulWidget {
-  String goalUuid;
+  final String goalUuid;
 
   CreateGoalScreen({
     @required this.goalUuid,
@@ -28,44 +29,39 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
           appBar: AppBar(
             title: Text("Create goal"),
           ),
-          body: ListView(
-            children: <Widget>[
-              // TITLE
-              Container(
-                padding: EdgeInsets.all(16),
-                child: Card(
-                  elevation: CARD_ELEVATION,
-                  child: Container(
-                    padding: EdgeInsets.all(16),
-                    child: new TextField(
-                      onSubmitted: (String newTitle) {
-                        print(newTitle);
-                        goalViewModel.onGoalTitleChanged(
-                            widget.goalUuid, newTitle);
-                      },
-                      controller: textEditingController,
-                      decoration: new InputDecoration.collapsed(
-                        hintText: 'I want to...',
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ListView(
+              children: <Widget>[
+                // TITLE
+                Container(
+                  padding: EdgeInsets.only(top: 16, bottom: 16),
+                  child: Card(
+                    elevation: kCardElevation,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      child: new TextField(
+                        onSubmitted: (String newTitle) {
+                          goalViewModel.onGoalTitleChanged(
+                              widget.goalUuid, newTitle);
+                        },
+                        controller: textEditingController,
+                        decoration: new InputDecoration.collapsed(
+                          hintText: 'I want to...',
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              // CHOOSE IMAGE
-              Dismissible(
-                key: UniqueKey(),
-                child: Container(
-                  height: 320,
-                  width: 240,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Card(
-                    elevation: CARD_ELEVATION,
-                  ),
+                // CHOOSE IMAGE
+                GoalImagePicker(
+                  goalUuid: widget.goalUuid,
+                  goalViewModel: goalViewModel,
                 ),
-              ),
-              // WHY SECTION
-              // WHAT SECTION
-            ],
+                // WHY SECTION
+                // WHAT SECTION
+              ],
+            ),
           ),
         );
       },

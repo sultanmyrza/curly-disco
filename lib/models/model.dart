@@ -23,7 +23,7 @@ class Goal {
 
   Goal copyWith({
     String uuid,
-    String title = "New goal",
+    String title,
     String photoUrl = "",
     String photoLocalPathIOS,
     String photoLocalPathAndroid,

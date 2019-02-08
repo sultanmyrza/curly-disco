@@ -67,7 +67,7 @@ List<Goal> goalUpdatePhotoLocalPathIOSReducer(
       return goal;
     } else {
       var newGoal = goal.copyWith(photoLocalPathIOS: action.photoLocalPathIOS);
-      return goal;
+      return newGoal;
     }
   }).toList();
 }

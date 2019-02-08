@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:redux_training/main.dart';
@@ -15,7 +17,13 @@ class GoalCardHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget image = Image.asset("assets/default.png");
 
-    if (goal.photoUrl != null && goal.photoUrl.contains("http")) {
+    try {
+      if (Platform.isAndroid) {
+        image = Image.file(File(goal.photoLocalPathAndroid));
+      } else {
+        image = Image.file(File(goal.photoLocalPathIOS));
+      }
+    } catch (filedLocalImage) {
       image = Image.network(goal.photoUrl);
     }
 
@@ -36,7 +44,7 @@ class GoalCardHomeScreen extends StatelessWidget {
                 context, MaterialPageRoute(builder: (context) => Container()));
           },
           child: Card(
-            elevation: CARD_ELEVATION,
+            elevation: kCardElevation,
             key: UniqueKey(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
