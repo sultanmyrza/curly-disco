@@ -17,8 +17,8 @@ Reducer<List<Goal>> goalReducer = combineReducers<List<Goal>>([
 
 List<Goal> addGoalReducer(List<Goal> goals, AddGoalAction action) {
   return []
-    ..addAll(goals)
-    ..add(action.goal);
+    ..add(action.goal)
+    ..addAll(goals);
 }
 
 List<Goal> removeGoalReducer(List<Goal> goals, RemoveGoalAction action) {
@@ -45,6 +45,11 @@ List<Goal> goalChangeTitleReducer(
     List<Goal> goals, GoalChangeTitleAction action) {
   return goals.map((Goal goal) {
     if (goal.uuid == action.goalUuid) {
+      /**
+       * Also works
+       * goal.title = action.newTitle;
+       * return goal;
+       */
       var newGoal = goal.copyWith(title: action.newTitle);
       return newGoal;
     } else {
