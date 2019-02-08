@@ -5,10 +5,10 @@ import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models/view_models.dart';
 import 'package:uuid/uuid.dart';
 
-class AddWhy extends StatelessWidget {
+class AddWhat extends StatelessWidget {
   final goalUuid;
 
-  const AddWhy({
+  const AddWhat({
     Key key,
     @required this.goalUuid,
   }) : super(key: key);
@@ -24,7 +24,7 @@ class AddWhy extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Text(
-                "Why...",
+                "What...",
                 style: TextStyle(fontSize: 32),
               ),
               IconButton(
@@ -32,7 +32,7 @@ class AddWhy extends StatelessWidget {
                 onPressed: () {
                   showSearch(
                     context: context,
-                    delegate: ConnectParentSearchDelegate(
+                    delegate: ConnectChildSearchDelegate(
                       goalUuid: goalUuid,
                       goalViewModel: goalViewModel,
                     ),
@@ -47,11 +47,11 @@ class AddWhy extends StatelessWidget {
   }
 }
 
-class ConnectParentSearchDelegate extends SearchDelegate<String> {
+class ConnectChildSearchDelegate extends SearchDelegate<String> {
   final String goalUuid;
   GoalViewModel goalViewModel;
 
-  ConnectParentSearchDelegate({
+  ConnectChildSearchDelegate({
     this.goalUuid,
     this.goalViewModel,
   });
@@ -122,7 +122,7 @@ class ConnectParentSearchDelegate extends SearchDelegate<String> {
         ),
         trailing: Text("connect"),
         onTap: () {
-          goalViewModel.connectParent(goal.uuid, g.uuid, true);
+          goalViewModel.connectChild(goalUuid, g.uuid, true);
           close(context, null);
         },
       );
@@ -136,7 +136,7 @@ class ConnectParentSearchDelegate extends SearchDelegate<String> {
         var newGoalUuid = Uuid().v1();
         var newGoalTitle = query;
         goalViewModel.onAddGoal(newGoalUuid, newGoalTitle);
-        goalViewModel.connectParent(goal.uuid, newGoalUuid, true);
+        goalViewModel.connectChild(goal.uuid, newGoalUuid, true);
         close(context, null);
       },
     );

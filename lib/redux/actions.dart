@@ -65,3 +65,15 @@ class ConnectParentAction {
     @required this.connect,
   });
 }
+
+class ConnectChildAction {
+  final goalUuid;
+  final childGoalUuid;
+  final bool connect;
+
+  ConnectChildAction({
+    @required this.goalUuid,
+    @required this.childGoalUuid,
+    @required this.connect,
+  });
+}

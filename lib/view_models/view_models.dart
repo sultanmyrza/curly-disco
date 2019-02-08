@@ -20,6 +20,11 @@ class GoalViewModel {
     String,
     bool,
   ) connectParent;
+  final Function(
+    String,
+    String,
+    bool,
+  ) connectChild;
 
   GoalViewModel({
     this.goals,
@@ -29,6 +34,7 @@ class GoalViewModel {
     this.onGoalTitleChanged,
     this.onGoalUpdatePhotoLocalPathIOS,
     this.connectParent,
+    this.connectChild,
   });
 
   factory GoalViewModel.create(Store<AppState> store) {
@@ -69,6 +75,16 @@ class GoalViewModel {
       );
     }
 
+    _connectChild(String goalUuid, String connectChild, bool connect) {
+      return store.dispatch(
+        ConnectChildAction(
+          goalUuid: goalUuid,
+          childGoalUuid: connectChild,
+          connect: connect,
+        ),
+      );
+    }
+
     return GoalViewModel(
       goals: store.state.goals,
       onAddGoal: _onAddGoal,
@@ -77,6 +93,7 @@ class GoalViewModel {
       onGoalTitleChanged: _onGoalTitleChanged,
       onGoalUpdatePhotoLocalPathIOS: _onGoalUpdatePhotoLocalPathIOS,
       connectParent: _connectParent,
+      connectChild: _connectChild,
     );
   }
 }
