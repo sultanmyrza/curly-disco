@@ -11,6 +11,10 @@ class GoalViewModel {
     String,
     String,
   ) onGoalTitleChanged;
+  final Function(
+    String,
+    String,
+  ) onGoalUpdatePhotoLocalPathIOS;
 
   GoalViewModel({
     this.goals,
@@ -18,6 +22,7 @@ class GoalViewModel {
     this.onCompleted,
     this.onRemoveGoal,
     this.onGoalTitleChanged,
+    this.onGoalUpdatePhotoLocalPathIOS,
   });
 
   factory GoalViewModel.create(Store<AppState> store) {
@@ -40,12 +45,20 @@ class GoalViewModel {
       ));
     }
 
+    _onGoalUpdatePhotoLocalPathIOS(String goalUuid, String photoLocalPathIOS) {
+      store.dispatch(GoalUpdatePhotoLocalPathIOSAction(
+        goalUuid: goalUuid,
+        photoLocalPathIOS: photoLocalPathIOS,
+      ));
+    }
+
     return GoalViewModel(
       goals: store.state.goals,
       onAddGoal: _onAddGoal,
       onCompleted: _onCompleted,
       onRemoveGoal: _onRemoveGoal,
       onGoalTitleChanged: _onGoalTitleChanged,
+      onGoalUpdatePhotoLocalPathIOS: _onGoalUpdatePhotoLocalPathIOS,
     );
   }
 }
