@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:redux_training/view_models.dart';
+import 'package:redux_training/view_models/view_models.dart';
 
 class AddGoalWidget extends StatefulWidget {
   final GoalViewModel goalViewModel;

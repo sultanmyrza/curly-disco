@@ -12,6 +12,7 @@ Reducer<List<Goal>> goalReducer = combineReducers<List<Goal>>([
   TypedReducer<List<Goal>, RemoveGoalsAction>(removeGoalsReducer),
   TypedReducer<List<Goal>, LoadedGoalsAction>(loadGoalsReducer),
   TypedReducer<List<Goal>, GoalCompletedAction>(goalCompletedReducer),
+  TypedReducer<List<Goal>, GoalChangeTitleAction>(goalChangeTitleReducer)
 ]);
 
 List<Goal> addGoalReducer(List<Goal> goals, AddGoalAction action) {
@@ -38,6 +39,18 @@ List<Goal> goalCompletedReducer(List<Goal> goals, GoalCompletedAction action) {
           ? goal.copyWith(isCompleted: !goal.isCompleted)
           : goal)
       .toList();
+}
+
+List<Goal> goalChangeTitleReducer(
+    List<Goal> goals, GoalChangeTitleAction action) {
+  return goals.map((Goal goal) {
+    if (goal.uuid == action.goalUuid) {
+      var newGoal = goal.copyWith(title: action.newTitle);
+      return newGoal;
+    } else {
+      return goal;
+    }
+  }).toList();
 }
 
 //List<Goal> goalReducer(List<Goal> state, action) {

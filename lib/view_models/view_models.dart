@@ -7,12 +7,17 @@ class GoalViewModel {
   final Function(String) onAddGoal;
   final Function(Goal) onCompleted;
   final Function(Goal) onRemoveGoal;
+  final Function(
+    String,
+    String,
+  ) onGoalTitleChanged;
 
   GoalViewModel({
     this.goals,
     this.onAddGoal,
     this.onCompleted,
     this.onRemoveGoal,
+    this.onGoalTitleChanged,
   });
 
   factory GoalViewModel.create(Store<AppState> store) {
@@ -28,11 +33,19 @@ class GoalViewModel {
       store.dispatch(GoalCompletedAction(goal));
     }
 
+    _onGoalTitleChanged(String goalUuid, String newTitle) {
+      store.dispatch(GoalChangeTitleAction(
+        goalUuid: goalUuid,
+        newTitle: newTitle,
+      ));
+    }
+
     return GoalViewModel(
       goals: store.state.goals,
       onAddGoal: _onAddGoal,
       onCompleted: _onCompleted,
       onRemoveGoal: _onRemoveGoal,
+      onGoalTitleChanged: _onGoalTitleChanged,
     );
   }
 }

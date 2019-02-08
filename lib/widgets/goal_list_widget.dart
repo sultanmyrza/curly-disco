@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redux_training/models/model.dart';
-import 'package:redux_training/view_models.dart';
+import 'package:redux_training/view_models/view_models.dart';
 
 class GoalListWidget extends StatelessWidget {
   final GoalViewModel goalViewModel;

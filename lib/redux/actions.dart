@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -30,4 +31,14 @@ class LoadedGoalsAction {
 class GoalCompletedAction {
   final Goal goal;
   GoalCompletedAction(this.goal);
+}
+
+class GoalChangeTitleAction {
+  final goalUuid;
+  final newTitle;
+
+  GoalChangeTitleAction({
+    @required this.goalUuid,
+    @required this.newTitle,
+  });
 }
