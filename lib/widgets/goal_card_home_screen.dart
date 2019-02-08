@@ -4,16 +4,17 @@ import 'package:redux_training/models/model.dart';
 
 class GoalCardHomeScreen extends StatelessWidget {
   final Goal goal;
-
+  final Function deleteGoal;
   GoalCardHomeScreen({
     @required this.goal,
+    @required this.deleteGoal,
   });
 
   @override
   Widget build(BuildContext context) {
     Widget image = Image.asset("assets/default.png");
 
-    if (goal.photoUrl.contains("http")) {
+    if (goal.photoUrl != null && goal.photoUrl.contains("http")) {
       image = Image.network(goal.photoUrl);
     }
 
@@ -24,6 +25,9 @@ class GoalCardHomeScreen extends StatelessWidget {
         right: 8,
       ),
       child: Dismissible(
+        onDismissed: (DismissDirection dismissDirection) {
+          this.deleteGoal();
+        },
         key: UniqueKey(),
         child: GestureDetector(
           onTap: () {
