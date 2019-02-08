@@ -41,7 +41,12 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                     child: Container(
                       padding: EdgeInsets.all(16),
                       child: new TextField(
+                        autofocus: true,
                         onSubmitted: (String newTitle) {
+                          goalViewModel.onGoalTitleChanged(
+                              widget.goalUuid, newTitle);
+                        },
+                        onChanged: (String newTitle) {
                           goalViewModel.onGoalTitleChanged(
                               widget.goalUuid, newTitle);
                         },
