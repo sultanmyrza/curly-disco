@@ -10,6 +10,10 @@ import 'package:redux_training/screens/home_screen.dart';
 
 void main() => runApp(MyApp());
 
+var CARD_ELEVATION = 1.0;
+var DARK_THEME = ThemeData.dark();
+var LIGHT_THEME = ThemeData.light();
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
         title: 'Goals app',
-        theme: ThemeData.dark(),
+        theme: DARK_THEME,
         home: StoreBuilder(
             onInit: (store) => store.dispatch(GetGoalsAction()),
             builder: (BuildContext context, Store<AppState> store) {

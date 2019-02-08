@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models/view_models.dart';
 
@@ -33,6 +34,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
               Container(
                 padding: EdgeInsets.all(16),
                 child: Card(
+                  elevation: CARD_ELEVATION,
                   child: Container(
                     padding: EdgeInsets.all(16),
                     child: new TextField(
@@ -50,7 +52,17 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                 ),
               ),
               // CHOOSE IMAGE
-              Card(),
+              Dismissible(
+                key: UniqueKey(),
+                child: Container(
+                  height: 320,
+                  width: 240,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Card(
+                    elevation: CARD_ELEVATION,
+                  ),
+                ),
+              ),
               // WHY SECTION
               // WHAT SECTION
             ],

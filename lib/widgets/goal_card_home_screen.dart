@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
 
 class GoalCardHomeScreen extends StatelessWidget {
@@ -35,6 +36,7 @@ class GoalCardHomeScreen extends StatelessWidget {
                 context, MaterialPageRoute(builder: (context) => Container()));
           },
           child: Card(
+            elevation: CARD_ELEVATION,
             key: UniqueKey(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
