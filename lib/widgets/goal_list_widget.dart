@@ -13,6 +13,16 @@ class GoalListWidget extends StatelessWidget {
     return ListView(
       children: goalViewModel.goals.map((Goal goal) {
         return ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return Container();
+                },
+              ),
+            );
+          },
           title: Text(goal.title),
           leading: IconButton(
             icon: Icon(Icons.delete),
