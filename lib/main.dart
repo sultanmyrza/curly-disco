@@ -24,9 +24,7 @@ class MyApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
         title: 'Goals app',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: ThemeData.dark(),
         home: StoreBuilder(
             onInit: (store) => store.dispatch(GetGoalsAction()),
             builder: (BuildContext context, Store<AppState> store) {
