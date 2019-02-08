@@ -5,7 +5,7 @@ import 'package:redux/redux.dart';
 import 'package:redux_dev_tools/redux_dev_tools.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models.dart';
-import 'package:redux_training/widgets/add_goal_widget.dart';
+import 'package:redux_training/widgets/goal_card_home_screen.dart';
 import 'package:redux_training/widgets/goal_list_widget.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -109,11 +109,10 @@ class HomeGoalsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        AddGoalWidget(goalViewModel),
-        Expanded(child: GoalListWidget(goalViewModel)),
-      ],
+    return ListView(
+      children: goalViewModel.goals
+          .map((Goal goal) => GoalCardHomeScreen(goal: goal))
+          .toList(),
     );
   }
 }
