@@ -42,3 +42,13 @@ class GoalChangeTitleAction {
     @required this.newTitle,
   });
 }
+
+class GoalUpdatePhotoLocalPathIOSAction {
+  final goalUuid;
+  final photoLocalPathIOS;
+
+  GoalUpdatePhotoLocalPathIOSAction({
+    @required this.goalUuid,
+    @required this.photoLocalPathIOS,
+  });
+}

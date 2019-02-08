@@ -15,6 +15,8 @@ List<Middleware<AppState>> appStateMiddleware(
     TypedMiddleware<AppState, RemoveGoalAction>(saveItems),
     TypedMiddleware<AppState, RemoveGoalsAction>(saveItems),
     TypedMiddleware<AppState, GetGoalsAction>(loadItems),
+    TypedMiddleware<AppState, GoalChangeTitleAction>(saveItems),
+    TypedMiddleware<AppState, GoalUpdatePhotoLocalPathIOSAction>(saveItems),
   ];
 }
 

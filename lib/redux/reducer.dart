@@ -12,7 +12,9 @@ Reducer<List<Goal>> goalReducer = combineReducers<List<Goal>>([
   TypedReducer<List<Goal>, RemoveGoalsAction>(removeGoalsReducer),
   TypedReducer<List<Goal>, LoadedGoalsAction>(loadGoalsReducer),
   TypedReducer<List<Goal>, GoalCompletedAction>(goalCompletedReducer),
-  TypedReducer<List<Goal>, GoalChangeTitleAction>(goalChangeTitleReducer)
+  TypedReducer<List<Goal>, GoalChangeTitleAction>(goalChangeTitleReducer),
+  TypedReducer<List<Goal>, GoalUpdatePhotoLocalPathIOSAction>(
+      goalUpdatePhotoLocalPathIOSReducer),
 ]);
 
 List<Goal> addGoalReducer(List<Goal> goals, AddGoalAction action) {
@@ -53,6 +55,18 @@ List<Goal> goalChangeTitleReducer(
       var newGoal = goal.copyWith(title: action.newTitle);
       return newGoal;
     } else {
+      return goal;
+    }
+  }).toList();
+}
+
+List<Goal> goalUpdatePhotoLocalPathIOSReducer(
+    List<Goal> goals, GoalUpdatePhotoLocalPathIOSAction action) {
+  return goals.map((Goal goal) {
+    if (goal.uuid != action.goalUuid) {
+      return goal;
+    } else {
+      var newGoal = goal.copyWith(photoLocalPathIOS: action.photoLocalPathIOS);
       return goal;
     }
   }).toList();
