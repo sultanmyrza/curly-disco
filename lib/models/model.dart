@@ -17,8 +17,8 @@ class Goal {
     this.photoLocalPathIOS,
     this.photoLocalPathAndroid,
     this.isCompleted = false,
-    this.parentGoalsUuids,
-    this.childGoalsUuids,
+    this.parentGoalsUuids = const <String>[],
+    this.childGoalsUuids = const <String>[],
   });
 
   Goal copyWith({

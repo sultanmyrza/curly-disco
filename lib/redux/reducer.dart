@@ -15,6 +15,7 @@ Reducer<List<Goal>> goalReducer = combineReducers<List<Goal>>([
   TypedReducer<List<Goal>, GoalChangeTitleAction>(goalChangeTitleReducer),
   TypedReducer<List<Goal>, GoalUpdatePhotoLocalPathIOSAction>(
       goalUpdatePhotoLocalPathIOSReducer),
+  TypedReducer<List<Goal>, ConnectParentAction>(connectParentReducer),
 ]);
 
 List<Goal> addGoalReducer(List<Goal> goals, AddGoalAction action) {
@@ -72,20 +73,33 @@ List<Goal> goalUpdatePhotoLocalPathIOSReducer(
   }).toList();
 }
 
-//List<Goal> goalReducer(List<Goal> state, action) {
-//  if (action is AddGoalAction) {
-//    return []
-//      ..addAll(state)
-//      ..add(action.goal);
-//  }
-//
-//  if (action is RemoveGoalAction) {
-//    return List.unmodifiable(List.from(state)..remove(action.goal));
-//  }
-//
-//  if (action is LoadedGoalsAction) {
-//    return List.unmodifiable(action.goals);
-//  }
-//
-//  return state;
-//}
+List<Goal> connectParentReducer(List<Goal> goals, ConnectParentAction action) {
+  var goal = goals.firstWhere((Goal g) => g.uuid == action.goalUuid);
+  var parentGoal =
+      goals.firstWhere((Goal g) => g.uuid == action.parentGoalUuid);
+
+  if (action.connect == true) {
+    goal.parentGoalsUuids = List.from(goal.parentGoalsUuids)
+      ..add(parentGoal.uuid);
+    goal.parentGoalsUuids = goal.parentGoalsUuids.toSet().toList();
+
+    parentGoal.childGoalsUuids = List.from(parentGoal.childGoalsUuids)
+      ..add(goal.uuid);
+    parentGoal.childGoalsUuids = parentGoal.childGoalsUuids.toSet().toList();
+  } else {
+    goal.parentGoalsUuids
+        .where((String parentGoalUuid) => parentGoalUuid != parentGoal.uuid);
+    parentGoal.childGoalsUuids
+        .where((String childGoalUuid) => childGoalUuid != goal.uuid);
+  }
+
+  return goals.map((Goal g) {
+    if (g.uuid == parentGoal.uuid) {
+      return parentGoal;
+    } else if (g.uuid == goal.uuid) {
+      return goal;
+    } else {
+      return g;
+    }
+  }).toList();
+}

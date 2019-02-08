@@ -4,7 +4,7 @@ import 'package:redux_training/redux/actions.dart';
 
 class GoalViewModel {
   final List<Goal> goals;
-  final Function(String) onAddGoal;
+  final Function(String, String) onAddGoal;
   final Function(Goal) onCompleted;
   final Function(Goal) onRemoveGoal;
   final Function(
@@ -15,6 +15,11 @@ class GoalViewModel {
     String,
     String,
   ) onGoalUpdatePhotoLocalPathIOS;
+  final Function(
+    String,
+    String,
+    bool,
+  ) connectParent;
 
   GoalViewModel({
     this.goals,
@@ -23,11 +28,13 @@ class GoalViewModel {
     this.onRemoveGoal,
     this.onGoalTitleChanged,
     this.onGoalUpdatePhotoLocalPathIOS,
+    this.connectParent,
   });
 
   factory GoalViewModel.create(Store<AppState> store) {
-    _onAddGoal(String newGoalTitle) {
-      store.dispatch(AddGoalAction(newGoalTitle));
+    _onAddGoal(String newGoalUuid, String newGoalTitle) {
+      store.dispatch(
+          AddGoalAction(newGoalUuid: newGoalUuid, newGoalTitle: newGoalTitle));
     }
 
     _onRemoveGoal(Goal goal) {
@@ -52,6 +59,16 @@ class GoalViewModel {
       ));
     }
 
+    _connectParent(String goalUuid, String parentUuid, bool connect) {
+      return store.dispatch(
+        ConnectParentAction(
+          goalUuid: goalUuid,
+          parentGoalUuid: parentUuid,
+          connect: connect,
+        ),
+      );
+    }
+
     return GoalViewModel(
       goals: store.state.goals,
       onAddGoal: _onAddGoal,
@@ -59,6 +76,7 @@ class GoalViewModel {
       onRemoveGoal: _onRemoveGoal,
       onGoalTitleChanged: _onGoalTitleChanged,
       onGoalUpdatePhotoLocalPathIOS: _onGoalUpdatePhotoLocalPathIOS,
+      connectParent: _connectParent,
     );
   }
 }

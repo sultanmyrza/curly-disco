@@ -8,8 +8,9 @@ class AddGoalAction {
   String uuid;
   Goal goal;
   String newGoalUuid;
-  AddGoalAction(this.newGoalUuid) {
-    this.goal = Goal(uuid: newGoalUuid);
+  String newGoalTitle;
+  AddGoalAction({this.newGoalUuid, this.newGoalTitle = "New Title"}) {
+    this.goal = Goal(uuid: newGoalUuid, title: newGoalTitle);
   }
 }
 
@@ -50,5 +51,17 @@ class GoalUpdatePhotoLocalPathIOSAction {
   GoalUpdatePhotoLocalPathIOSAction({
     @required this.goalUuid,
     @required this.photoLocalPathIOS,
+  });
+}
+
+class ConnectParentAction {
+  final goalUuid;
+  final parentGoalUuid;
+  final bool connect;
+
+  ConnectParentAction({
+    @required this.goalUuid,
+    @required this.parentGoalUuid,
+    @required this.connect,
   });
 }

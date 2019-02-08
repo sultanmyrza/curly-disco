@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         label: Text("Create new"),
         onPressed: () {
           String newGoalUuid = uuid.v1().toString();
-          _goalViewModel.onAddGoal(newGoalUuid);
+          _goalViewModel.onAddGoal(newGoalUuid, "New Goal");
           // add to store and pass the goal;
 
           Navigator.push(context, MaterialPageRoute(builder: (context) {

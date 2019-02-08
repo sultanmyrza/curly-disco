@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models/view_models.dart';
+import 'package:redux_training/widgets/add_why.dart';
 import 'package:redux_training/widgets/goal_image_picker.dart';
 
 class CreateGoalScreen extends StatefulWidget {
@@ -25,6 +26,14 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
     return StoreConnector<AppState, GoalViewModel>(
       converter: (Store<AppState> store) => GoalViewModel.create(store),
       builder: (BuildContext context, GoalViewModel goalViewModel) {
+        var goal = goalViewModel.goals
+            .firstWhere((Goal g) => g.uuid == widget.goalUuid);
+
+        var parentGoals = goal.parentGoalsUuids
+            .map((String parentGoalUuid) => goalViewModel.goals
+                .firstWhere((Goal g) => g.uuid == parentGoalUuid))
+            .toList();
+
         return Scaffold(
           appBar: AppBar(
             title: Text("Create goal"),
@@ -64,7 +73,38 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                   goalViewModel: goalViewModel,
                 ),
                 // WHY SECTION
-                // WHAT SECTION
+                AddWhy(goalUuid: widget.goalUuid),
+                // WHAT SECTION,
+                SizedBox(height: 16),
+                Wrap(
+                  children: parentGoals.map((Goal parentGoal) {
+                    return Card(
+                      elevation: kCardElevation,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              parentGoal.title.length > 30
+                                  ? parentGoal.title.substring(0, 30) + "..."
+                                  : parentGoal.title,
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  goalViewModel.connectParent(
+                                      goal.uuid, parentGoal.uuid, false);
+                                }),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(
+                  height: 300,
+                ),
               ],
             ),
           ),
