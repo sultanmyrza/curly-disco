@@ -80,17 +80,21 @@ List<Goal> connectParentReducer(List<Goal> goals, ConnectParentAction action) {
 
   if (action.connect == true) {
     goal.parentGoalsUuids = List.from(goal.parentGoalsUuids)
-      ..add(parentGoal.uuid);
-    goal.parentGoalsUuids = goal.parentGoalsUuids.toSet().toList();
+      ..add(parentGoal.uuid)
+      ..toSet()
+      ..toList();
 
     parentGoal.childGoalsUuids = List.from(parentGoal.childGoalsUuids)
-      ..add(goal.uuid);
-    parentGoal.childGoalsUuids = parentGoal.childGoalsUuids.toSet().toList();
+      ..add(goal.uuid)
+      ..toSet()
+      ..toList();
   } else {
-    goal.parentGoalsUuids
-        .where((String parentGoalUuid) => parentGoalUuid != parentGoal.uuid);
-    parentGoal.childGoalsUuids
-        .where((String childGoalUuid) => childGoalUuid != goal.uuid);
+    goal.parentGoalsUuids = goal.parentGoalsUuids
+        .where((String parentGoalUuid) => parentGoalUuid != parentGoal.uuid)
+        .toList();
+    parentGoal.childGoalsUuids = parentGoal.childGoalsUuids
+        .where((String childGoalUuid) => childGoalUuid != goal.uuid)
+        .toList();
   }
 
   return goals.map((Goal g) {
