@@ -6,10 +6,9 @@ final uuidGenerator = Uuid();
 class AddGoalAction {
   String uuid;
   Goal goal;
-  String newGoalTitle;
-  AddGoalAction(this.newGoalTitle) {
-    String randomUuid = uuidGenerator.v1();
-    this.goal = Goal(uuid: randomUuid, title: newGoalTitle);
+  String newGoalUuid;
+  AddGoalAction(this.newGoalUuid) {
+    this.goal = Goal(uuid: newGoalUuid);
   }
 }
 
