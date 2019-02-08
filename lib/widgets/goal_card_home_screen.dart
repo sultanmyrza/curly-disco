@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:redux_training/main.dart';
@@ -16,7 +18,16 @@ class GoalCardHomeScreen extends StatelessWidget {
     Widget image = Image.asset("assets/default.png");
 
     // TODO: implement to load image from local storage
-    if (goal.photoUrl != null && goal.photoUrl.contains("http")) {
+    if (goal.photoLocalPathIOS != null) {
+      var file = File(goal.photoLocalPathIOS);
+      if (file.existsSync()) {
+        image = Image.file(file);
+      } else {
+        // TODO: fix by loading images from cloud if not exist in file
+        print(
+            "file does not exist because you re-install app todo fix to load from cloud");
+      }
+    } else if (goal.photoUrl != null && goal.photoUrl.contains("http")) {
       image = Image.network(goal.photoUrl);
     }
 
