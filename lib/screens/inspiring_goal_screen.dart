@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
+import 'package:redux_training/screens/taks_screen.dart';
 import 'package:redux_training/view_models/view_models.dart';
 import 'package:redux_training/widgets/add_what.dart';
 import 'package:redux_training/widgets/add_why.dart';
@@ -118,29 +119,31 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
                   child: AddWhy(goalUuid: widget.goalUuid),
                 ),
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Container(
-                      height: 320.0,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: parentsRecursively.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            width: 320.0,
-                            child: GoalCardHomeScreen(
-                              dismissable: false,
-                              goal: parentsRecursively[index],
-                              deleteGoal: () {
-                                goalViewModel
-                                    .onRemoveGoal(parentsRecursively[index]);
+                  child: parentsRecursively.length == 0
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Container(
+                            height: 320.0,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: parentsRecursively.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  width: 320.0,
+                                  child: GoalCardHomeScreen(
+                                    dismissable: false,
+                                    goal: parentsRecursively[index],
+                                    deleteGoal: () {
+                                      goalViewModel.onRemoveGoal(
+                                          parentsRecursively[index]);
+                                    },
+                                  ),
+                                );
                               },
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                          ),
+                        ),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -158,7 +161,9 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return Container();
+                                return TaskList(
+                                  goalUuid: childGoal.uuid,
+                                );
                               },
                             ),
                           );

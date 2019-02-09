@@ -94,7 +94,8 @@ class ConnectParentSearchDelegate extends SearchDelegate<String> {
 
     var connectableGoals = goals.where((Goal g) {
       if (goal.parentGoalsUuids.contains(g.uuid) ||
-          goal.childGoalsUuids.contains(g.uuid)) {
+          goal.childGoalsUuids.contains(g.uuid) ||
+          g.uuid == goal.uuid) {
         return false;
       } else {
         return true;
