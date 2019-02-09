@@ -56,8 +56,8 @@ class Goal {
         childGoalsUuids =
             List<String>.from(json['childGoalsUuids'] ?? <String>[]);
 
-  Map toJson() {
-    Map result = {
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> result = {
       "uuid": uuid,
       "title": title,
       "photoUrl": photoUrl,
