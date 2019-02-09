@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/redux/actions.dart';
@@ -18,13 +20,16 @@ List<Middleware<AppState>> appStateMiddleware(
   final connectParentInFirebase = _connectParentInFirebase(state);
   final connectChildInFirebase = _connectChildInFirebase(state);
 
+  var updatePhotoPathIOS = _updatePhotoPathIOS(state);
+
   return [
     TypedMiddleware<AppState, AddGoalAction>(addToFireBase),
     TypedMiddleware<AppState, RemoveGoalAction>(deleteGoalInFirebase),
     TypedMiddleware<AppState, RemoveGoalsAction>(saveItems),
     TypedMiddleware<AppState, GetGoalsAction>(loadItemsFromFireBase),
     TypedMiddleware<AppState, GoalChangeTitleAction>(updateTitleInFirebase),
-    TypedMiddleware<AppState, GoalUpdatePhotoLocalPathIOSAction>(saveItems),
+    TypedMiddleware<AppState, GoalUpdatePhotoLocalPathIOSAction>(
+        updatePhotoPathIOS),
     TypedMiddleware<AppState, ConnectParentAction>(connectParentInFirebase),
     TypedMiddleware<AppState, ConnectChildAction>(connectChildInFirebase),
   ];
@@ -41,6 +46,50 @@ Middleware<AppState> _addToFireBase(AppState state) {
     Firestore.instance
         .document('${currentUser.email}/${goal.uuid}')
         .setData(data);
+  };
+}
+
+Middleware<AppState> _updatePhotoPathIOS(AppState state) {
+  return (Store<AppState> store, action, NextDispatcher next) async {
+    next(action);
+    var currentUser = await FirebaseAuth.instance.currentUser();
+
+    var goalUpdatePhotoLocalPathIOSAction =
+        action as GoalUpdatePhotoLocalPathIOSAction;
+    var goalUuid = goalUpdatePhotoLocalPathIOSAction.goalUuid;
+    var photoLocalPathIOS =
+        goalUpdatePhotoLocalPathIOSAction.photoLocalPathIOS.toString();
+
+    await Firestore.instance
+        .document("${currentUser.email}/${goalUuid}")
+        .updateData({
+      "photoLocalPathIOS": photoLocalPathIOS,
+    });
+
+    String userPath = (await FirebaseAuth.instance.currentUser()).email;
+
+    var file = File(photoLocalPathIOS);
+
+    StorageReference FirebaseStorageRef =
+        FirebaseStorage.instance.ref().child("$userPath/$goalUuid.jpeg");
+    var storageUploadTask = FirebaseStorageRef.putFile(file);
+
+    storageUploadTask.events.listen((storageUploadTask) {
+      var bytesTransferred = storageUploadTask.snapshot.bytesTransferred;
+      var totalByteCount = storageUploadTask.snapshot.totalByteCount;
+      var progress = (bytesTransferred / totalByteCount * 100).toInt();
+      print(progress);
+    });
+
+    var storageTaskSnapshot = await storageUploadTask.onComplete;
+    var downloadURL = await storageTaskSnapshot.ref.getDownloadURL();
+    var photoUrl = downloadURL.toString();
+    await Firestore.instance
+        .document("${currentUser.email}/${goalUuid}")
+        .updateData({
+      "photoUrl": photoUrl,
+    });
+    print(photoUrl);
   };
 }
 
