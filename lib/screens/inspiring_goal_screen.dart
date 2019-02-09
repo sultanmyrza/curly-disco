@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models/view_models.dart';
+import 'package:redux_training/widgets/add_why.dart';
 import 'package:redux_training/widgets/goal_image_picker.dart';
 
 class InspiringGoalScreen extends StatefulWidget {
   final String goalUuid;
+  final String goalTitle;
 
-  InspiringGoalScreen({
-    @required this.goalUuid,
-  });
+  InspiringGoalScreen({@required this.goalUuid, @required this.goalTitle});
 
   @override
   _InspiringGoalScreenState createState() => _InspiringGoalScreenState();
 }
 
 class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
+  var textEditingController;
   @override
   Widget build(BuildContext context) {
+    textEditingController = TextEditingController(text: widget.goalTitle);
+
     return StoreConnector<AppState, GoalViewModel>(
         converter: (Store<AppState> store) => GoalViewModel.create(store),
         builder: (BuildContext context, GoalViewModel goalViewModel) {
           var goal = goalViewModel.goals
               .firstWhere((Goal g) => g.uuid == widget.goalUuid);
-
           return Scaffold(
             body: CustomScrollView(
               slivers: <Widget>[
@@ -35,9 +38,12 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
 //                  pinned: true,
                   flexibleSpace: Dismissible(
                     key: UniqueKey(),
-                    child: GoalImagePicker(
-                      goalViewModel: goalViewModel,
-                      goalUuid: widget.goalUuid,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: GoalImagePicker(
+                        goalViewModel: goalViewModel,
+                        goalUuid: widget.goalUuid,
+                      ),
                     ),
                   ),
                 ),
@@ -48,7 +54,37 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
 //                  ),
 //                ),
                 SliverToBoxAdapter(
-                  child: Text("Why"),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: 16,
+                      bottom: 16,
+                      left: 8,
+                      right: 8,
+                    ),
+                    child: Card(
+                      elevation: kCardElevation,
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        child: new TextField(
+                          onSubmitted: (String newTitle) {
+                            goalViewModel.onGoalTitleChanged(
+                                widget.goalUuid, newTitle);
+                          },
+                          onChanged: (String newTitle) {
+                            goalViewModel.onGoalTitleChanged(
+                                widget.goalUuid, newTitle);
+                          },
+                          controller: textEditingController,
+                          decoration: new InputDecoration.collapsed(
+                            hintText: 'I want to...',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: AddWhy(goalUuid: widget.goalUuid),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -96,5 +132,11 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
             ),
           );
         });
+  }
+
+  @override
+  void dispose() {
+    textEditingController?.dispose();
+    super.dispose();
   }
 }

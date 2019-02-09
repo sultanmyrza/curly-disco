@@ -50,6 +50,7 @@ class GoalCardHomeScreen extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => InspiringGoalScreen(
                       goalUuid: goal.uuid,
+                      goalTitle: goal.title,
                     ),
               ),
             );
