@@ -5,6 +5,7 @@ import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models/view_models.dart';
 import 'package:redux_training/widgets/add_why.dart';
+import 'package:redux_training/widgets/goal_card_home_screen.dart';
 import 'package:redux_training/widgets/goal_image_picker.dart';
 
 class InspiringGoalScreen extends StatefulWidget {
@@ -18,16 +19,23 @@ class InspiringGoalScreen extends StatefulWidget {
 }
 
 class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
-  var textEditingController;
   @override
   Widget build(BuildContext context) {
-    textEditingController = TextEditingController(text: widget.goalTitle);
-
     return StoreConnector<AppState, GoalViewModel>(
         converter: (Store<AppState> store) => GoalViewModel.create(store),
         builder: (BuildContext context, GoalViewModel goalViewModel) {
           var goal = goalViewModel.goals
               .firstWhere((Goal g) => g.uuid == widget.goalUuid);
+
+          // TODO use bfs to fetch parents recursively
+          var parentsRecursively = goal.parentGoalsUuids
+              .map((String uuid) =>
+                  goalViewModel.goals.firstWhere((Goal g) => g.uuid == uuid))
+              .toList()
+              .reversed
+              .toList();
+//              bfs(goalViewModel.goals, goal, BFS_DIRECTION.PARENTS);
+
           return Scaffold(
             body: CustomScrollView(
               slivers: <Widget>[
@@ -65,16 +73,16 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
                       elevation: kCardElevation,
                       child: Container(
                         padding: EdgeInsets.all(16),
-                        child: new TextField(
-                          onSubmitted: (String newTitle) {
+                        child: TextFormField(
+                          initialValue: goal.title,
+                          onSaved: (newTitle) {
                             goalViewModel.onGoalTitleChanged(
                                 widget.goalUuid, newTitle);
                           },
-                          onChanged: (String newTitle) {
+                          onFieldSubmitted: (newTitle) {
                             goalViewModel.onGoalTitleChanged(
                                 widget.goalUuid, newTitle);
                           },
-                          controller: textEditingController,
                           decoration: new InputDecoration.collapsed(
                             hintText: 'I want to...',
                           ),
@@ -90,16 +98,20 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Container(
-                      height: 240.0,
+                      height: 320.0,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 10,
+                        itemCount: parentsRecursively.length,
                         itemBuilder: (context, index) {
                           return Container(
                             width: 320.0,
-                            child: Card(
-                              color: Colors.orange,
-                              child: Text('data'),
+                            child: GoalCardHomeScreen(
+                              dismissable: false,
+                              goal: parentsRecursively[index],
+                              deleteGoal: () {
+                                goalViewModel
+                                    .onRemoveGoal(parentsRecursively[index]);
+                              },
                             ),
                           );
                         },
@@ -132,11 +144,5 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
             ),
           );
         });
-  }
-
-  @override
-  void dispose() {
-    textEditingController?.dispose();
-    super.dispose();
   }
 }
