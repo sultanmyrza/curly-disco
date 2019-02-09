@@ -33,6 +33,7 @@ class GoalCardHomeScreen extends StatelessWidget {
         );
       } else {
         // TODO: fix by loading images from cloud if not exist in file
+        image = Image.network(goal.photoUrl);
         print(
             "file does not exist because you re-install app todo fix to load from cloud");
       }

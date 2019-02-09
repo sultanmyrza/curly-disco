@@ -33,6 +33,8 @@ class GoalImagePicker extends StatelessWidget {
             file,
             fit: BoxFit.cover,
           );
+        } else if (goal.photoUrl != null && goal.photoUrl.contains("http")) {
+          image = Image.network(goal.photoUrl);
         }
       } catch (e) {}
     }
