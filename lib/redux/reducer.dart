@@ -26,7 +26,8 @@ List<Goal> addGoalReducer(List<Goal> goals, AddGoalAction action) {
 }
 
 List<Goal> removeGoalReducer(List<Goal> goals, RemoveGoalAction action) {
-  return List.unmodifiable(List.from(goals)..remove(action.goal));
+  return List.unmodifiable(
+      List.from(goals.where((Goal g) => g.uuid != action.goal.uuid).toList()));
 }
 
 List<Goal> removeGoalsReducer(List<Goal> goals, RemoveGoalsAction action) {

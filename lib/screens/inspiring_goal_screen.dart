@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
 import 'package:redux_training/view_models/view_models.dart';
+import 'package:redux_training/widgets/add_what.dart';
 import 'package:redux_training/widgets/add_why.dart';
 import 'package:redux_training/widgets/goal_card_home_screen.dart';
 import 'package:redux_training/widgets/goal_image_picker.dart';
@@ -35,6 +36,28 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
               .reversed
               .toList();
 //              bfs(goalViewModel.goals, goal, BFS_DIRECTION.PARENTS);
+
+//          var childrenGoals = goal.childGoalsUuids
+//              .map(
+//                (String uuid) => goalViewModel.goals
+//                        .firstWhere((Goal g) => g.uuid == uuid, orElse: () {
+//                      return null;
+//                    }),
+//              )
+//              .toList()
+//              .reversed
+//              .toList();
+          List<Goal> childrenGoals = [];
+          goal.childGoalsUuids.forEach((String childUuid) {
+            var childGoal = goalViewModel.goals.firstWhere(
+                (Goal g) => g.uuid == childUuid,
+                orElse: () => null);
+            if (childGoal == null) {
+              print(childUuid);
+            } else {
+              childrenGoals.add(childGoal);
+            }
+          });
 
           return Scaffold(
             body: CustomScrollView(
@@ -121,25 +144,41 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("What"),
+                    padding: const EdgeInsets.all(8),
+                    child: AddWhat(goalUuid: widget.goalUuid),
                   ),
                 ),
-                SliverGrid(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 1,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    return GestureDetector(
-                      child: Text("$index"),
-                      onTap: () {},
-                    );
-                  }),
+
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    var childGoal = childrenGoals[index];
+                    return ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return Container();
+                              },
+                            ),
+                          );
+                        },
+                        title: Text(childGoal.title),
+                        leading: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            goalViewModel.onRemoveGoal(childGoal);
+                          },
+                        ),
+                        trailing: Checkbox(
+                            value: childGoal.isCompleted,
+                            onChanged: (_) {
+                              goalViewModel.onCompleted(childGoal);
+                            }));
+                  }, childCount: childrenGoals.length),
                 ),
+
+                SliverToBoxAdapter(child: SizedBox(height: 200)),
               ],
             ),
           );
