@@ -26,39 +26,43 @@ class _InspiringGoalScreenState extends State<InspiringGoalScreen> {
     return StoreConnector<AppState, GoalViewModel>(
         converter: (Store<AppState> store) => GoalViewModel.create(store),
         builder: (BuildContext context, GoalViewModel goalViewModel) {
-          var goal = goalViewModel.goals
-              .firstWhere((Goal g) => g.uuid == widget.goalUuid);
+          var goal = goalViewModel.goals.firstWhere(
+              (Goal g) => g.uuid == widget.goalUuid,
+              orElse: () => null);
+          if (goal == null) {
+            Navigator.pop(context);
+            return Scaffold();
+          }
 
           // TODO use bfs to fetch parents recursively
           var parentsRecursively = goal.parentGoalsUuids
-              .map((String uuid) =>
-                  goalViewModel.goals.firstWhere((Goal g) => g.uuid == uuid))
+              .map((String uuid) => goalViewModel.goals
+                  .firstWhere((Goal g) => g.uuid == uuid, orElse: () => null))
+              .where((Goal g) => g != null)
               .toList()
               .reversed
               .toList();
-//              bfs(goalViewModel.goals, goal, BFS_DIRECTION.PARENTS);
 
-//          var childrenGoals = goal.childGoalsUuids
-//              .map(
-//                (String uuid) => goalViewModel.goals
-//                        .firstWhere((Goal g) => g.uuid == uuid, orElse: () {
-//                      return null;
-//                    }),
-//              )
-//              .toList()
-//              .reversed
-//              .toList();
-          List<Goal> childrenGoals = [];
-          goal.childGoalsUuids.forEach((String childUuid) {
-            var childGoal = goalViewModel.goals.firstWhere(
-                (Goal g) => g.uuid == childUuid,
-                orElse: () => null);
-            if (childGoal == null) {
-              print(childUuid);
-            } else {
-              childrenGoals.add(childGoal);
-            }
-          });
+          var childrenGoals = goal.childGoalsUuids
+              .map((String childrenUuid) => goalViewModel.goals.firstWhere(
+                    (Goal g) => g.uuid == childrenUuid,
+                    orElse: () => null,
+                  ))
+              .where((Goal g) => g != null)
+              .toList()
+              .reversed
+              .toList();
+
+//          goal.childGoalsUuids.forEach((String childUuid) {
+//            var childGoal = goalViewModel.goals.firstWhere(
+//                (Goal g) => g.uuid == childUuid,
+//                orElse: () => null);
+//            if (childGoal == null) {
+//              print(childUuid);
+//            } else {
+//              childrenGoals.add(childGoal);
+//            }
+//          });
 
           return Scaffold(
             body: CustomScrollView(
