@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:redux_training/models/model.dart';
+import 'package:redux_training/screens/taks_screen.dart';
 import 'package:redux_training/view_models/view_models.dart';
 
 class GoalListWidget extends StatelessWidget {
@@ -10,15 +11,22 @@ class GoalListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('GoalListWidget.build');
+
+    var tasks = goalViewModel.goals
+        .where((Goal g) => g.childGoalsUuids.length == 0)
+        .toList();
+
     return ListView(
-      children: goalViewModel.goals.map((Goal goal) {
+      children: tasks.map((Goal goal) {
         return ListTile(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return Container();
+                  return TaskList(
+                    goalUuid: goal.uuid,
+                  );
                 },
               ),
             );
