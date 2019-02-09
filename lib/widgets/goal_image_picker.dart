@@ -28,10 +28,12 @@ class GoalImagePicker extends StatelessWidget {
     } else if (Platform.isIOS) {
       try {
         var file = File(goal.photoLocalPathIOS);
-        image = Image.file(
-          file,
-          fit: BoxFit.cover,
-        );
+        if (file.existsSync() != false) {
+          image = Image.file(
+            file,
+            fit: BoxFit.cover,
+          );
+        }
       } catch (e) {}
     }
 

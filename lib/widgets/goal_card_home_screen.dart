@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:redux_training/main.dart';
 import 'package:redux_training/models/model.dart';
+import 'package:redux_training/screens/inspiring_goal_screen.dart';
 
 class GoalCardHomeScreen extends StatelessWidget {
   final Goal goal;
@@ -45,7 +46,13 @@ class GoalCardHomeScreen extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Container()));
+              context,
+              MaterialPageRoute(
+                builder: (context) => InspiringGoalScreen(
+                      goalUuid: goal.uuid,
+                    ),
+              ),
+            );
           },
           child: Card(
             elevation: kCardElevation,
