@@ -6,6 +6,8 @@ class Goal {
   String photoUrl;
   String photoLocalPathIOS;
   String photoLocalPathAndroid;
+  double xPos;
+  double yPos;
   bool isCompleted;
   List<String> parentGoalsUuids;
   List<String> childGoalsUuids;

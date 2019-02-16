@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_dev_tools/flutter_redux_dev_tools.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_dev_tools/redux_dev_tools.dart';
 import 'package:redux_training/models/model.dart';
@@ -35,16 +37,54 @@ class _MyHomePageState extends State<MyHomePage> {
           // TODO: fix this hack _goalViewModel used in fab on pressed
           _goalViewModel = goalViewModel;
 
-          return PageView(
-            controller: pageController,
-            physics: NeverScrollableScrollPhysics(),
+          return Stack(
             children: <Widget>[
-              new HomeGoalsList(
-                goalViewModel: goalViewModel,
+              PageView(
+                controller: pageController,
+                physics: NeverScrollableScrollPhysics(),
+                children: <Widget>[
+                  new HomeGoalsList(
+                    goalViewModel: goalViewModel,
+                  ),
+                  new HomeTaskList(
+                    goalViewModel: goalViewModel,
+                  ),
+                ],
               ),
-              new HomeTaskList(
-                goalViewModel: goalViewModel,
-              ),
+              GestureDetector(
+                onTap: () async {
+                  var currentUser = await FirebaseAuth.instance.currentUser();
+                  var email = currentUser.email;
+                  var selectedUrl =
+                      'https://us-central1-goals-redux-training.cloudfunctions.net/mindmap/?email=$email';
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WebviewScaffold(
+                              url: selectedUrl,
+                              appBar: new AppBar(
+                                title: const Text('Widget webview'),
+                              ),
+                              withZoom: true,
+                              withLocalStorage: true,
+                              hidden: true,
+                              initialChild: Container(
+                                color: Colors.redAccent,
+                                child: const Center(
+                                  child: Text('Waiting.....'),
+                                ),
+                              ),
+                            ),
+                      ));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Icon(
+                    Icons.directions,
+                    size: 48,
+                  ),
+                ),
+              )
             ],
           );
         },

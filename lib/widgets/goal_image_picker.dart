@@ -27,14 +27,16 @@ class GoalImagePicker extends StatelessWidget {
       try {} catch (e) {}
     } else if (Platform.isIOS) {
       try {
-        var file = File(goal.photoLocalPathIOS);
-        if (file.existsSync() != false) {
-          image = Image.file(
-            file,
-            fit: BoxFit.cover,
-          );
-        } else if (goal.photoUrl != null && goal.photoUrl.contains("http")) {
-          image = Image.network(goal.photoUrl);
+        if (goal.photoLocalPathIOS.length > 0) {
+          var file = File(goal.photoLocalPathIOS);
+          if (file.existsSync() != false) {
+            image = Image.file(
+              file,
+              fit: BoxFit.cover,
+            );
+          } else if (goal.photoUrl != null && goal.photoUrl.contains("http")) {
+            image = Image.network(goal.photoUrl);
+          }
         }
       } catch (e) {}
     }
